@@ -14,20 +14,38 @@ function CadastroForm() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  // FASE 0: Cadastro integrado com backend
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (nome && email && senha) {
-      sessionStorage.setItem(
-        "fitconnect_user",
-        JSON.stringify({
-          id: "new-" + Date.now(),
-          nome,
-          email,
-          tipo,
-        })
-      );
+    setLoading(true);
+    setError("");
+
+    try {
+      // Chamar API de registro
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, senha, tipo }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Erro ao criar conta");
+        setLoading(false);
+        return;
+      }
+
+      // Cadastro bem-sucedido! Sessão já criada automaticamente
       router.push("/dashboard");
+      router.refresh();
+    } catch (err) {
+      console.error("Erro ao criar conta:", err);
+      setError("Erro de conexão. Tente novamente.");
+      setLoading(false);
     }
   }
 
@@ -43,6 +61,12 @@ function CadastroForm() {
         <h1 className="text-center text-xl font-bold text-slate-900">
           Criar conta
         </h1>
+
+        {error && (
+          <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            {error}
+          </div>
+        )}
 
         <div className="mt-4 flex gap-2 rounded-lg bg-slate-100 p-1">
           {(["aluno", "personal", "academia"] as const).map((t) => (
@@ -99,9 +123,10 @@ function CadastroForm() {
           </div>
           <button
             type="submit"
-            className="w-full rounded-lg bg-brand-600 py-2 font-medium text-white hover:bg-brand-700"
+            disabled={loading}
+            className="w-full rounded-lg bg-brand-600 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Cadastrar
+            {loading ? "Criando conta..." : "Cadastrar"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-slate-600">
