@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Dumbbell,
   LayoutDashboard,
@@ -12,7 +12,14 @@ import {
   Star,
   LogOut,
 } from "lucide-react";
-import type { Usuario, TipoUsuario } from "@/types";
+
+// Tipo simplificado de usuário retornado pela API
+interface UserDB {
+  id: string;
+  email: string;
+  nome: string;
+  tipo: string;
+}
 
 export default function DashboardLayout({
   children,
@@ -20,19 +27,62 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [user, setUser] = useState<Usuario | null>(null);
+  const router = useRouter();
 
+  // Estados da API
+  const [user, setUser] = useState<UserDB | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // FASE 0: Buscar usuário logado da API
   useEffect(() => {
-    const raw = typeof window !== "undefined" && sessionStorage.getItem("fitconnect_user");
-    if (raw) {
+    async function fetchUser() {
+      setLoading(true);
+
       try {
-        setUser(JSON.parse(raw));
-      } catch {
-        setUser(null);
+        const res = await fetch("/api/auth/me");
+
+        if (!res.ok) {
+          // Não autenticado, redirecionar para login
+          router.push("/login");
+          return;
+        }
+
+        const data = await res.json();
+        setUser(data.user);
+      } catch (err) {
+        console.error("Erro ao buscar usuário:", err);
+        router.push("/login");
+      } finally {
+        setLoading(false);
       }
     }
-  }, []);
 
+    fetchUser();
+  }, [router]);
+
+  // FASE 0: Logout via API
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/");
+      router.refresh();
+    } catch (err) {
+      console.error("Erro ao fazer logout:", err);
+      // Mesmo com erro, redirecionar
+      router.push("/");
+    }
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="text-slate-600">Carregando...</p>
+      </div>
+    );
+  }
+
+  // Não autenticado (não deveria chegar aqui pois useEffect redireciona)
   if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
@@ -87,14 +137,13 @@ export default function DashboardLayout({
             <span className="text-sm text-slate-600">
               {user.nome} ({user.tipo})
             </span>
-            <Link
-              href="/"
-              onClick={() => sessionStorage.removeItem("fitconnect_user")}
+            <button
+              onClick={handleLogout}
               className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
             >
               <LogOut className="h-4 w-4" />
               Sair
-            </Link>
+            </button>
           </div>
         </div>
       </header>
