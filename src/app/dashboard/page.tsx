@@ -3,24 +3,54 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Calendar, MapPin, CreditCard, Star } from "lucide-react";
-import type { Usuario } from "@/types";
+
+// Tipo de usuário retornado pela API
+interface UserDB {
+  id: string;
+  email: string;
+  nome: string;
+  tipo: string;
+}
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<Usuario | null>(null);
+  const [user, setUser] = useState<UserDB | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // FASE 0: Buscar usuário da API (o layout já faz isso, mas vamos garantir)
   useEffect(() => {
-    const raw =
-      typeof window !== "undefined" &&
-      sessionStorage.getItem("fitconnect_user");
-    if (raw) {
+    async function fetchUser() {
+      setLoading(true);
+
       try {
-        setUser(JSON.parse(raw));
-      } catch {
+        const res = await fetch("/api/auth/me");
+
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        console.error("Erro ao buscar usuário:", err);
         setUser(null);
+      } finally {
+        setLoading(false);
       }
     }
+
+    fetchUser();
   }, []);
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-slate-600">Carregando...</p>
+      </div>
+    );
+  }
+
+  // Se não tem usuário (não deveria acontecer pois o layout já protege)
   if (!user) return null;
 
   const isAluno = user.tipo === "aluno";
