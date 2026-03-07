@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Dumbbell, MapPin, Star, Calendar } from "lucide-react";
+import { Dumbbell, MapPin, Star, Calendar, LogOut } from "lucide-react";
 
 // Tipo de treino retornado pela API
 interface TreinoDB {
@@ -17,6 +17,14 @@ interface TreinoDB {
   duracaoMinutos: number;
   valorTotal: number;
   status: string;
+}
+
+// Tipo de usuário retornado pela API
+interface UserDB {
+  id: string;
+  email: string;
+  nome: string;
+  tipo: string;
 }
 
 function formatDataHora(iso: string) {
@@ -34,11 +42,36 @@ export default function ReservaPage() {
   const params = useParams();
   const router = useRouter();
 
-  // Estados da API
+  // Estados da API - Treino
   const [treino, setTreino] = useState<TreinoDB | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [reservando, setReservando] = useState(false);
+
+  // Estados da API - Usuário
+  const [user, setUser] = useState<UserDB | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // FASE 0: Verificar autenticação
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setCheckingAuth(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
 
   // FASE 0: Buscar treino da API ao carregar a página
   useEffect(() => {
@@ -67,6 +100,19 @@ export default function ReservaPage() {
 
     fetchTreino();
   }, [params.id]);
+
+  // Handler de logout
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setUser(null);
+      router.push("/");
+      router.refresh();
+    } catch (err) {
+      console.error("Erro ao fazer logout:", err);
+      router.push("/");
+    }
+  }
 
   // FASE 0: Criar reserva via API
   async function handleConfirmar() {
@@ -139,9 +185,34 @@ export default function ReservaPage() {
             <Dumbbell className="h-7 w-7 text-brand-600" />
             <span className="font-bold text-brand-800">FitnessConnect</span>
           </Link>
-          <Link href="/login" className="text-brand-600 font-medium">
-            Entrar para reservar
-          </Link>
+
+          {!checkingAuth && (
+            <nav className="flex items-center gap-4">
+              {user ? (
+                // Usuário logado: mostrar nome e logout
+                <>
+                  <Link href="/dashboard" className="text-slate-600 hover:text-brand-600">
+                    Dashboard
+                  </Link>
+                  <span className="text-sm text-slate-600">
+                    {user.nome}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sair
+                  </button>
+                </>
+              ) : (
+                // Usuário não logado: mostrar mensagem para entrar
+                <Link href="/login" className="text-brand-600 font-medium">
+                  Entrar para reservar
+                </Link>
+              )}
+            </nav>
+          )}
         </div>
       </header>
 

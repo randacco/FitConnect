@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Dumbbell, MapPin, Star, Calendar, Filter } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Dumbbell, MapPin, Star, Calendar, Filter, LogOut } from "lucide-react";
 
 // Tipo de treino retornado pela API
 // FASE 0: dados do personal/academia salvos diretamente no treino
@@ -19,6 +20,14 @@ interface TreinoDB {
   status: string;
 }
 
+// Tipo de usuário retornado pela API
+interface UserDB {
+  id: string;
+  email: string;
+  nome: string;
+  tipo: string;
+}
+
 function formatDataHora(iso: string) {
   const d = new Date(iso);
   return d.toLocaleDateString("pt-BR", {
@@ -31,15 +40,42 @@ function formatDataHora(iso: string) {
 }
 
 export default function BuscaPage() {
+  const router = useRouter();
+
   // Estados dos filtros
   const [filtroPrecoMax, setFiltroPrecoMax] = useState<number | "">("");
   const [filtroData, setFiltroData] = useState("");
   const [ordenarPor, setOrdenarPor] = useState<"preco" | "data" | "rating">("data");
 
-  // Estados da API
+  // Estados da API - Treinos
   const [treinos, setTreinos] = useState<TreinoDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Estados da API - Usuário (para verificar autenticação)
+  const [user, setUser] = useState<UserDB | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // FASE 0: Verificar se usuário está autenticado (opcional para página de busca)
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setCheckingAuth(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
 
   // FASE 0: Buscar treinos da API sempre que filtros mudarem
   useEffect(() => {
@@ -85,6 +121,19 @@ export default function BuscaPage() {
     fetchTreinos();
   }, [filtroPrecoMax, filtroData, ordenarPor]); // Re-buscar quando filtros mudarem
 
+  // Handler de logout
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setUser(null);
+      router.push("/");
+      router.refresh();
+    } catch (err) {
+      console.error("Erro ao fazer logout:", err);
+      router.push("/");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
@@ -93,14 +142,40 @@ export default function BuscaPage() {
             <Dumbbell className="h-7 w-7 text-brand-600" />
             <span className="font-bold text-brand-800">FitnessConnect</span>
           </Link>
-          <nav className="flex gap-4">
-            <Link href="/" className="text-slate-600 hover:text-brand-600">
-              Início
-            </Link>
-            <Link href="/login" className="text-brand-600 font-medium">
-              Entrar
-            </Link>
-          </nav>
+
+          {/* Se ainda está verificando autenticação, não mostrar nada */}
+          {!checkingAuth && (
+            <nav className="flex items-center gap-4">
+              {user ? (
+                // Usuário logado: mostrar nome, link para dashboard e logout
+                <>
+                  <Link href="/dashboard" className="text-slate-600 hover:text-brand-600">
+                    Dashboard
+                  </Link>
+                  <span className="text-sm text-slate-600">
+                    {user.nome}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sair
+                  </button>
+                </>
+              ) : (
+                // Usuário não logado: mostrar Início e Entrar
+                <>
+                  <Link href="/" className="text-slate-600 hover:text-brand-600">
+                    Início
+                  </Link>
+                  <Link href="/login" className="text-brand-600 font-medium">
+                    Entrar
+                  </Link>
+                </>
+              )}
+            </nav>
+          )}
         </div>
       </header>
 
