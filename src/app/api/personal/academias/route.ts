@@ -1,7 +1,7 @@
 /**
  * API de Academias do Personal - GET /api/personal/academias
  *
- * FASE 0: Marketplace de academias com base nos treinos do personal logado
+ * FASE 0: Marketplace de academias disponiveis para o personal logado
  */
 
 import { NextResponse } from 'next/server';
@@ -50,7 +50,7 @@ export async function GET() {
     }
 
     const treinos = await prisma.treino.findMany({
-      where: { personalNome: user.nome },
+      where: { status: 'disponivel' },
       select: {
         academiaNome: true,
         academiaEndereco: true,
@@ -71,13 +71,13 @@ export async function GET() {
           nome: treino.academiaNome,
           endereco: treino.academiaEndereco,
           rating: treino.academiaRating,
-          treinosDisponiveis: treino.status === 'disponivel' ? 1 : 0,
+          treinosDisponiveis: 1,
           valorMedioSessao: treino.valorTotal,
         });
         continue;
       }
 
-      existente.treinosDisponiveis += treino.status === 'disponivel' ? 1 : 0;
+      existente.treinosDisponiveis += 1;
       existente.valorMedioSessao =
         (existente.valorMedioSessao + treino.valorTotal) / 2;
       existente.rating = Math.max(existente.rating, treino.academiaRating);

@@ -30,31 +30,51 @@ async function main() {
   console.log('🗑️  Dados antigos limpos');
 
   // ============================================================
+  // CRIAR USUARIOS BASE PARA DEMONSTRACAO
+  // ============================================================
+  const mariana = await prisma.user.create({
+    data: {
+      nome: 'Mariana Dias',
+      email: 'mariana.dias@fitconnect.dev',
+      senha: '123456',
+      tipo: 'aluno',
+    },
+  });
+
+  const rafael = await prisma.user.create({
+    data: {
+      nome: 'Rafael Monteiro',
+      email: 'rafael.monteiro@fitconnect.dev',
+      senha: '123456',
+      tipo: 'personal',
+    },
+  });
+
+  console.log(`✅ Usuarios criados: ${mariana.nome} (aluna) e ${rafael.nome} (personal)`);
+
+  // ============================================================
   // CRIAR TREINOS DISPONÍVEIS
   // ============================================================
-  // Baseado nos mocks antigos de src/data/mock.ts
-  // Treinos para os próximos dias com diferentes personais e academias
-
-  const treinos = [
-    // Personal: Rafael Monteiro
+  // Treinos organizados por personal para facilitar manutencao da demo.
+  const treinosRafaelMonteiro = [
     {
       personalNome: "Rafael Monteiro",
       personalRating: 4.9,
       academiaNome: "Academia Fit Life",
       academiaEndereco: "Rua das Flores, 100 - São Paulo, SP",
       academiaRating: 4.8,
-      dataHora: new Date("2025-03-10T08:00:00"),
+      dataHora: new Date("2026-03-09T08:00:00"),
       valorTotal: 165, // 120 personal + 45 academia
       status: "disponivel"
     },
     {
       personalNome: "Rafael Monteiro",
       personalRating: 4.9,
-      academiaNome: "Academia Fit Life",
-      academiaEndereco: "Rua das Flores, 100 - São Paulo, SP",
-      academiaRating: 4.8,
-      dataHora: new Date("2025-03-10T10:00:00"),
-      valorTotal: 165,
+      academiaNome: "Academia Movimento",
+      academiaEndereco: "Rua Augusta, 200 - São Paulo, SP",
+      academiaRating: 4.9,
+      dataHora: new Date("2026-03-09T10:00:00"),
+      valorTotal: 170,
       status: "disponivel"
     },
     {
@@ -63,19 +83,40 @@ async function main() {
       academiaNome: "Espaço Corpo & Mente",
       academiaEndereco: "Av. Paulista, 500 - São Paulo, SP",
       academiaRating: 4.6,
-      dataHora: new Date("2025-03-11T08:00:00"),
+      dataHora: new Date("2026-03-10T09:00:00"),
       valorTotal: 175, // 120 personal + 55 academia
       status: "disponivel"
     },
+    {
+      personalNome: "Rafael Monteiro",
+      personalRating: 4.9,
+      academiaNome: "Academia Fit Life",
+      academiaEndereco: "Rua das Flores, 100 - São Paulo, SP",
+      academiaRating: 4.8,
+      dataHora: new Date("2026-03-11T18:00:00"),
+      valorTotal: 165,
+      status: "disponivel"
+    },
+    {
+      personalNome: "Rafael Monteiro",
+      personalRating: 4.9,
+      academiaNome: "Academia Movimento",
+      academiaEndereco: "Rua Augusta, 200 - São Paulo, SP",
+      academiaRating: 4.9,
+      dataHora: new Date("2026-03-12T07:30:00"),
+      valorTotal: 170,
+      status: "disponivel"
+    }
+  ];
 
-    // Personal: Ana Costa
+  const treinosAnaCosta = [
     {
       personalNome: "Ana Costa",
       personalRating: 4.7,
       academiaNome: "Academia Fit Life",
       academiaEndereco: "Rua das Flores, 100 - São Paulo, SP",
       academiaRating: 4.8,
-      dataHora: new Date("2025-03-10T14:00:00"),
+      dataHora: new Date("2026-03-13T14:00:00"),
       valorTotal: 145, // 100 personal + 45 academia
       status: "disponivel"
     },
@@ -85,7 +126,7 @@ async function main() {
       academiaNome: "Academia Movimento",
       academiaEndereco: "Rua Augusta, 200 - São Paulo, SP",
       academiaRating: 4.9,
-      dataHora: new Date("2025-03-11T10:00:00"),
+      dataHora: new Date("2026-03-14T10:00:00"),
       valorTotal: 150, // 100 personal + 50 academia
       status: "disponivel"
     },
@@ -95,19 +136,20 @@ async function main() {
       academiaNome: "Academia Movimento",
       academiaEndereco: "Rua Augusta, 200 - São Paulo, SP",
       academiaRating: 4.9,
-      dataHora: new Date("2025-03-11T16:00:00"),
+      dataHora: new Date("2026-03-14T16:00:00"),
       valorTotal: 150,
       status: "disponivel"
-    },
+    }
+  ];
 
-    // Personal: Carlos Silva
+  const treinosCarlosSilva = [
     {
       personalNome: "Carlos Silva",
       personalRating: 4.8,
       academiaNome: "Espaço Corpo & Mente",
       academiaEndereco: "Av. Paulista, 500 - São Paulo, SP",
       academiaRating: 4.6,
-      dataHora: new Date("2025-03-10T16:00:00"),
+      dataHora: new Date("2026-03-13T16:00:00"),
       valorTotal: 185, // 130 personal + 55 academia
       status: "disponivel"
     },
@@ -117,7 +159,7 @@ async function main() {
       academiaNome: "Academia Movimento",
       academiaEndereco: "Rua Augusta, 200 - São Paulo, SP",
       academiaRating: 4.9,
-      dataHora: new Date("2025-03-11T14:00:00"),
+      dataHora: new Date("2026-03-14T14:00:00"),
       valorTotal: 180, // 130 personal + 50 academia
       status: "disponivel"
     },
@@ -127,29 +169,18 @@ async function main() {
       academiaNome: "Espaço Corpo & Mente",
       academiaEndereco: "Av. Paulista, 500 - São Paulo, SP",
       academiaRating: 4.6,
-      dataHora: new Date("2025-03-12T08:00:00"),
+      dataHora: new Date("2026-03-15T08:00:00"),
       valorTotal: 185,
       status: "disponivel"
     },
 
-    // Mais alguns treinos para ter variedade
-    {
-      personalNome: "Rafael Monteiro",
-      personalRating: 4.9,
-      academiaNome: "Academia Fit Life",
-      academiaEndereco: "Rua das Flores, 100 - São Paulo, SP",
-      academiaRating: 4.8,
-      dataHora: new Date("2025-03-12T10:00:00"),
-      valorTotal: 165,
-      status: "disponivel"
-    },
     {
       personalNome: "Ana Costa",
       personalRating: 4.7,
       academiaNome: "Academia Fit Life",
       academiaEndereco: "Rua das Flores, 100 - São Paulo, SP",
       academiaRating: 4.8,
-      dataHora: new Date("2025-03-12T14:00:00"),
+      dataHora: new Date("2026-03-15T14:00:00"),
       valorTotal: 145,
       status: "disponivel"
     },
@@ -159,10 +190,16 @@ async function main() {
       academiaNome: "Academia Movimento",
       academiaEndereco: "Rua Augusta, 200 - São Paulo, SP",
       academiaRating: 4.9,
-      dataHora: new Date("2025-03-12T16:00:00"),
+      dataHora: new Date("2026-03-15T16:00:00"),
       valorTotal: 180,
       status: "disponivel"
     }
+  ];
+
+  const treinos = [
+    ...treinosRafaelMonteiro,
+    ...treinosAnaCosta,
+    ...treinosCarlosSilva,
   ];
 
   // Criar todos os treinos no banco
