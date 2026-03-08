@@ -1,18 +1,10 @@
 # FitnessConnect (FitConnect)
 
-## Instituicao e equipe
-
-CENTRO UNIVERSITARIO SENAC
-
-CURSO DE TECNOLOGIA EM ANALISE E DESENVOLVIMENTO DE SISTEMAS
-
-PROJETO INTEGRADOR IV: DESENVOLVIMENTO DE SISTEMA ORIENTADO A DISPOSITIVOS MOVEIS E BASEADO NA WEB
+Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web (Senac).
 
 
-2ª Entrega
+## Integrantes do Projeto
 
-
-Integrantes do grupo:
 
 - Ana Carolina Silva Biscalchin
 - Henrique Lilge Birriel
@@ -21,15 +13,11 @@ Integrantes do grupo:
 - Natally Ferreira Almeida Do Amaral
 - Rodrigo Pinto Do Amaral Lopes
 
-Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web (Senac).
-
-
-## Integrantes do Projeto
-
 
 ## Índice
 
 - [Integrantes do Projeto](#integrantes-do-projeto)
+- [Vídeo da Entrega](#vídeo-da-entrega)
 - [Visão do produto](#visão-do-produto)
 - [Funcionalidades](#funcionalidades-conforme-pdf)
 - [Requisitos técnicos](#requisitos-técnicos-pdf)
@@ -45,6 +33,14 @@ Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orie
 - Leonardo Sheldow Dos Santos Brito
 - Natally Ferreira Almeida Do Amaral
 - Rodrigo Pinto Do Amaral Lopes
+
+## Vídeo da Entrega
+
+O vídeo de demonstração está disponível no próprio repositório:
+
+- [Assistir demonstração (MP4)](./video/demo-fitconnect.mp4)
+
+> Coloque o arquivo em `video/demo-fitconnect.mp4` para manter o link funcionando no GitHub.
 
 ## Visão do produto
 
