@@ -33,7 +33,6 @@ O vídeo de demonstração está disponível no próprio repositório:
 
 - [Assistir demonstração (MP4)](./video/demo-fitconnect.mp4)
 
-> Coloque o arquivo em `video/demo-fitconnect.mp4` para manter o link funcionando no GitHub.
 
 ## Visão do produto
 
