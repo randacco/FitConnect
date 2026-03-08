@@ -2,6 +2,29 @@
 
 Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web (Senac).
 
+
+## Integrantes do Projeto
+
+
+## Índice
+
+- [Integrantes do Projeto](#integrantes-do-projeto)
+- [Visão do produto](#visão-do-produto)
+- [Funcionalidades](#funcionalidades-conforme-pdf)
+- [Requisitos técnicos](#requisitos-técnicos-pdf)
+- [Como rodar](#como-rodar)
+- [Estrutura do app](#estrutura-do-app)
+- [Stack](#stack)
+- [API Endpoints](#api-endpoints)
+- [Desenvolvimento em Fases](#desenvolvimento-em-fases)
+
+- Ana Carolina Silva Biscalchin
+- Henrique Lilge Birriel
+- Jeferson Oliveira Dos Santos
+- Leonardo Sheldow Dos Santos Brito
+- Natally Ferreira Almeida Do Amaral
+- Rodrigo Pinto Do Amaral Lopes
+
 ## Visão do produto
 
 O FitnessConnect é uma aplicação web responsiva que conecta **alunos**, **personal trainers** e **academias**:
