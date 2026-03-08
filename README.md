@@ -27,13 +27,6 @@ Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orie
 - [API Endpoints](#api-endpoints)
 - [Desenvolvimento em Fases](#desenvolvimento-em-fases)
 
-- Ana Carolina Silva Biscalchin
-- Henrique Lilge Birriel
-- Jeferson Oliveira Dos Santos
-- Leonardo Sheldow Dos Santos Brito
-- Natally Ferreira Almeida Do Amaral
-- Rodrigo Pinto Do Amaral Lopes
-
 ## Vídeo da Entrega
 
 O vídeo de demonstração está disponível no próprio repositório:
