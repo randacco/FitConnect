@@ -1,5 +1,26 @@
 # FitnessConnect (FitConnect)
 
+## Instituicao e equipe
+
+CENTRO UNIVERSITARIO SENAC
+
+CURSO DE TECNOLOGIA EM ANALISE E DESENVOLVIMENTO DE SISTEMAS
+
+PROJETO INTEGRADOR IV: DESENVOLVIMENTO DE SISTEMA ORIENTADO A DISPOSITIVOS MOVEIS E BASEADO NA WEB
+
+
+2ª Entrega
+
+
+Integrantes do grupo:
+
+- Ana Carolina Silva Biscalchin
+- Henrique Lilge Birriel
+- Jeferson Oliveira Dos Santos
+- Leonardo Sheldow Dos Santos Brito
+- Natally Ferreira Almeida Do Amaral
+- Rodrigo Pinto Do Amaral Lopes
+
 Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web (Senac).
 
 
@@ -33,13 +54,49 @@ O FitnessConnect é uma aplicação web responsiva que conecta **alunos**, **per
 - **Personais**: encontram espaços em academias parceiras, gerenciam agenda, recebem pagamento via split e têm perfil com certificações e avaliações.
 - **Academias**: cadastram horários disponíveis (marketplace de espaços), controlam acesso (ex.: QR Code), recebem repasse automático (split).
 
-## Funcionalidades (conforme PDF)
+## Funcionalidades 
 
 1. **Busca e geolocalização** — Encontrar personais e academias parceiras próximas.
 2. **Gestão de agenda integrada** — Sincronização de horários do personal com vagas da academia.
 3. **Marketplace de espaços** — Cadastro de infraestrutura e valores por parte das academias.
 4. **Sistema de avaliação** — Rating para personais, alunos e instalações.
 5. **Pagamento split** — Um único pagamento do aluno; a plataforma divide automaticamente (personal + academia + taxa de serviço).
+
+## Prova de conceito (2a etapa)
+
+Para a segunda etapa, a POC foi definida com foco em validar a jornada principal de reserva de treino e, adicionalmente, revisar a jornada do personal trainer em escopo funcional parcial.
+
+### POC implementada (funcional)
+
+- Cadastro e login por perfil (`aluno`, `personal`, `academia`)
+- Busca de treinos com filtros (preco, data e ordenacao)
+- Detalhe do treino e reserva
+- Agenda de reservas via API
+
+### Jornada do personal trainer (Rafael "Rafa" Monteiro) - revisitada
+
+**Objetivo da persona**
+
+- Preencher horarios ociosos, encontrar espacos para atender alunos e aumentar visibilidade profissional.
+
+**Passos da jornada**
+
+1. Acessa o sistema e autentica como `personal`.
+2. Consulta agenda e acompanha reservas.
+3. Visualiza academias disponiveis no marketplace.
+4. Acompanha reputacao em avaliacoes.
+5. Organiza sua rotina para aceitar novas reservas.
+
+**Dores que a jornada ataca**
+
+- Dificuldade de encontrar academias para atendimento externo.
+- Agenda e operacao descentralizadas.
+- Baixa visibilidade para captar novos alunos.
+
+**Status atual na entrega**
+
+- Implementado: autenticacao por perfil, painel do personal com agenda, academias e avaliacoes.
+- Parcial (proxima fase): fluxo completo de aceite de reserva pelo personal, avaliacoes persistidas e repasse financeiro/split real.
 
 ## Requisitos técnicos (PDF)
 
@@ -83,7 +140,7 @@ Acesse [http://localhost:5555](http://localhost:5555) para ver os dados no naveg
 
 - **Landing** (`/`) — Apresentação e links para busca, login e cadastro (aluno, personal, academia).
 - **Busca** (`/busca`) — Listagem de treinos com filtros (preço máximo, data) e ordenação (data, preço, avaliação).
-- **Login** (`/login`) e **Cadastro** (`/cadastro`) — Autenticação simulada (sessionStorage).
+- **Login** (`/login`) e **Cadastro** (`/cadastro`) — Autenticacao via API com cookie HTTP-only de sessao.
 - **Reserva** (`/reserva/[id]`) — Confirmação de reserva e explicação do pagamento split.
 - **Dashboard** (`/dashboard`) — Painel por perfil:
   - **Aluno**: início, agenda, buscar treinos, gastos.
@@ -117,7 +174,7 @@ Acesse [http://localhost:5555](http://localhost:5555) para ver os dados no naveg
 
 Este projeto está sendo desenvolvido em 3 fases incrementais. Para a entrega da segunda etapa do projeto integrador, estaremos focados em executar a FASE 0, porém deixamos documentadas abaixo as fases seguintes com as possíveis melhorias:
 
-- **FASE 0 (MVP Mínimo)**: Backend funcional + jornada do aluno - CONCLUÍDO
+- **FASE 0 (MVP Mínimo)**: Backend funcional + jornada principal de reserva + jornada do personal em escopo parcial - CONCLUÍDO
 - **FASE 1 (Segurança)**: Bcrypt, JWT, middleware, validação
 - **FASE 2 (Features Completas)**: Avaliações, QR Code, pagamento, upload, geolocalização
 
