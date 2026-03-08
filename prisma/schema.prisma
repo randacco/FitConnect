@@ -1,0 +1,89 @@
+// Schema do Prisma para FASE 0
+// Versão simplificada com models básicos: User, Treino, Reserva
+// Na Fase 1: adicionar models Personal, Academia com FKs
+// Na Fase 2: adicionar Avaliacao, Pagamento, Notificacao
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ============================================================
+// MODEL: User
+// ============================================================
+// Representa todos os tipos de usuários (aluno, personal, academia)
+// FASE 0: autenticação básica, senha SEM hash
+// FASE 1: adicionar hash bcrypt, separar Personal e Academia em models próprios
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  nome      String
+  senha     String   // ATENÇÃO: Senha em texto puro na Fase 0! Adicionar hash na Fase 1
+  tipo      String   // "aluno" | "personal" | "academia"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relações
+  reservas  Reserva[] @relation("AlunoReservas")
+}
+
+// ============================================================
+// MODEL: Treino
+// ============================================================
+// Representa uma sessão de treino disponível
+// FASE 0: dados do personal e academia salvos diretamente (sem FK)
+// FASE 1: refatorar para usar personalId e academiaId com FKs
+model Treino {
+  id               String   @id @default(cuid())
+
+  // FASE 0: dados salvos diretamente (simplificação)
+  personalNome     String
+  personalRating   Float    @default(4.5)
+  academiaNome     String
+  academiaEndereco String
+  academiaRating   Float    @default(4.5)
+
+  // Dados do treino
+  dataHora         DateTime
+  duracaoMinutos   Int      @default(60)
+  valorTotal       Float
+  status           String   @default("disponivel") // "disponivel" | "reservado" | "realizado" | "cancelado"
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relações
+  reservas         Reserva[]
+
+  // Índices para performance nas buscas
+  @@index([status])
+  @@index([dataHora])
+}
+
+// ============================================================
+// MODEL: Reserva
+// ============================================================
+// Representa uma reserva de treino feita por um aluno
+// FASE 0: funcionalidade básica de reservar e listar
+// FASE 2: adicionar QR Code, relação com Pagamento
+model Reserva {
+  id        String   @id @default(cuid())
+  treinoId  String
+  alunoId   String
+  status    String   @default("confirmada") // "pendente" | "confirmada" | "realizada" | "cancelada"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relações
+  treino    Treino   @relation(fields: [treinoId], references: [id], onDelete: Cascade)
+  aluno     User     @relation("AlunoReservas", fields: [alunoId], references: [id], onDelete: Cascade)
+
+  // Um treino pode ter apenas uma reserva ativa (constraint de negócio)
+  @@unique([treinoId])
+  @@index([alunoId])
+}
