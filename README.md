@@ -1,10 +1,11 @@
+![FitConnect logo](./FitConnect.Logo.svg)
+
 # FitnessConnect (FitConnect)
 
 Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orientado a Dispositivos Móveis e Baseados na Web (Senac).
 
 
 ## Integrantes do projeto
-
 
 - Ana Carolina Silva Biscalchin [[ana-biscalchin](https://github.com/ana-biscalchin)]
 - Henrique Lilge Birriel [[randacco](https://github.com/randacco)]
