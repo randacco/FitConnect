@@ -1,4 +1,4 @@
-![FitConnect logo](./FitConnect.Logo.svg)
+![FitConnect logo](./FitConnect.Logo.png)
 
 # FitnessConnect (FitConnect)
 
