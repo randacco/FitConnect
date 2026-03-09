@@ -32,7 +32,7 @@ Plataforma web do **Projeto Integrador IV** — Desenvolvimento de Sistemas Orie
 
 O projeto foi desenvolvido a partir de um documento colaborativo, disponível em PDF localizado no repositório, detalhando todos os processos envolvidos para a criação do software:
 
-- [Ler documentação do desenvolvimento (PDF)](./doc/Projeto Integrador IV - DESENVOLVIMENTO DE SISTEMAS ORIENTADO A DISPOSITIVOS MÓVEIS E BASEADOS NA WEB-1.pdf)
+- [Ler documentação do desenvolvimento (PDF)](./doc/Projeto_Integrador_IV_DESENVOLVIMENTO_DE_SISTEMAS_ORIENTADO_A_DISPOSITIVOS_MÓVEIS_E_BASEADOS_NA_WEB.pdf)
 
 ## Vídeo da entrega
 
